@@ -8,11 +8,6 @@ document.querySelectorAll('[data-checkout]').forEach(link => {
   });
 });
 
-// Destaque visual da referência, mantendo integralmente o texto fornecido.
-const headline = document.querySelector('h1');
-const highlight = 'ÉLIMINER 80 TYPES DE DOULEURS ET DE TROUBLES PSYCHOSOMATIQUES';
-headline.innerHTML = headline.innerHTML.replace(highlight, `<span class="red">${highlight}</span>`);
-
 const carousel = document.querySelector('.carousel');
 const viewport = carousel.querySelector('.carousel-window');
 const track = carousel.querySelector('.carousel-track');
