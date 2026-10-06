@@ -1,5 +1,5 @@
 /* Configure aqui o link único do checkout. Ex.: https://seu-checkout.com */
-const CHECKOUT_URL = '';
+const CHECKOUT_URL = 'https://pay.hotmart.com/H107900929R?off=1evf6xho&checkoutMode=10';
 
 document.querySelectorAll('[data-checkout]').forEach(link => {
   if (CHECKOUT_URL) link.href = CHECKOUT_URL;
