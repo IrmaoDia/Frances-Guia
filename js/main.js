@@ -118,6 +118,70 @@ new ResizeObserver(() => {
 }).observe(viewport);
 updateSlide(0);
 
+const guideCarousel = document.querySelector('.guide-carousel');
+const guideTrack = guideCarousel.querySelector('.guide-track');
+const guideImages = [...guideTrack.children];
+const guideDots = guideCarousel.querySelector('.guide-dots');
+let guideIndex = 0;
+let guideTimer;
+const guidePointers = new Set();
+let guideTouchX = null;
+
+function scheduleGuide(delay = 4000) {
+  clearTimeout(guideTimer);
+  if (reducedMotion.matches || document.hidden || guidePointers.size) return;
+  guideTimer = setTimeout(() => {
+    showGuide(guideIndex + 1);
+    scheduleGuide();
+  }, delay);
+}
+function showGuide(index) {
+  guideIndex = (index + guideImages.length) % guideImages.length;
+  guideTrack.style.transform = `translateX(-${guideIndex * 100}%)`;
+  guideImages.forEach((img, i) => img.setAttribute('aria-hidden', String(i !== guideIndex)));
+  [...guideDots.children].forEach((dot, i) => dot.setAttribute('aria-current', String(i === guideIndex)));
+}
+function pauseGuide() { scheduleGuide(10000); }
+guideImages.forEach((img, i) => {
+  const dot = document.createElement('button');
+  dot.type = 'button';
+  dot.setAttribute('aria-label', `Afficher l’image ${i + 1}`);
+  dot.addEventListener('click', () => { showGuide(i); pauseGuide(); });
+  guideDots.append(dot);
+});
+guideCarousel.querySelector('.guide-previous').addEventListener('click', () => { showGuide(guideIndex - 1); pauseGuide(); });
+guideCarousel.querySelector('.guide-next').addEventListener('click', () => { showGuide(guideIndex + 1); pauseGuide(); });
+const guideSection = guideCarousel.closest('section');
+guideSection.addEventListener('pointerdown', event => {
+  guidePointers.add(event.pointerId);
+  if (event.target.closest('.guide-window')) guideTouchX = event.clientX;
+  clearTimeout(guideTimer);
+});
+guideSection.addEventListener('pointermove', pauseGuide, { passive: true });
+function releaseGuide(event) {
+  if (!guidePointers.has(event.pointerId)) return;
+  guidePointers.delete(event.pointerId);
+  if (event.type === 'pointerup' && guideTouchX !== null && Math.abs(event.clientX - guideTouchX) > 40) {
+    showGuide(guideIndex + (event.clientX < guideTouchX ? 1 : -1));
+  }
+  guideTouchX = null;
+  pauseGuide();
+}
+window.addEventListener('pointerup', releaseGuide);
+window.addEventListener('pointercancel', releaseGuide);
+guideSection.addEventListener('wheel', pauseGuide, { passive: true });
+guideSection.addEventListener('keydown', event => {
+  if (guideCarousel.contains(event.target) && ['ArrowRight', 'ArrowLeft'].includes(event.key)) {
+    event.preventDefault();
+    showGuide(guideIndex + (event.key === 'ArrowRight' ? 1 : -1));
+  }
+  pauseGuide();
+});
+document.addEventListener('visibilitychange', pauseGuide);
+reducedMotion.addEventListener('change', pauseGuide);
+showGuide(0);
+scheduleGuide();
+
 document.querySelectorAll('.faq').forEach(item => item.addEventListener('toggle', () => {
   if (item.open) document.querySelectorAll('.faq').forEach(other => {
     if (other !== item) other.open = false;
