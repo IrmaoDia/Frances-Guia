@@ -20,6 +20,14 @@ let visible = false;
 let scrollFrame = 0;
 let wheelUntil = 0;
 
+function loadVideo(video) {
+  const source = video.querySelector('source[data-src]');
+  if (!source) return;
+  source.src = source.dataset.src;
+  source.removeAttribute('data-src');
+  video.preload = 'metadata';
+  video.load();
+}
 function previewVideo(video) {
   video.pause();
   video.muted = true;
@@ -40,6 +48,7 @@ function syncPlayback() {
 
 function updateSlide(index) {
   current = index;
+  loadVideo(videos[current]);
   slides.forEach((slide, i) => {
     slide.setAttribute('aria-hidden', String(i !== current));
     slide.inert = i !== current;
