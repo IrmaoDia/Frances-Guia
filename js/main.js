@@ -1,13 +1,3 @@
-/* Configure aqui o link único do checkout. Ex.: https://seu-checkout.com */
-const CHECKOUT_URL = 'https://pay.hotmart.com/H107900929R?off=rizvli7r';
-
-document.querySelectorAll('[data-checkout]').forEach(link => {
-  if (CHECKOUT_URL) link.href = CHECKOUT_URL;
-  else link.addEventListener('click', () => {
-    document.querySelector('#checkout-message').hidden = false;
-  });
-});
-
 const carousel = document.querySelector('.carousel');
 const viewport = carousel.querySelector('.carousel-window');
 const track = carousel.querySelector('.carousel-track');
