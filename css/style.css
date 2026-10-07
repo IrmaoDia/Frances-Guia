@@ -45,17 +45,23 @@ button,input,select,textarea{font-family:'Poppins',sans-serif}
 .carousel-window::-webkit-scrollbar{display:none}
 .carousel-track{transform:none;transition:none}
 .slide{scroll-snap-align:start;scroll-snap-stop:always}
-.testimonial-video{position:relative;aspect-ratio:9/16;background:#19171d;border-radius:16px;overflow:hidden}
-.testimonial-player{display:block;width:100%;height:100%;object-fit:contain}
+.testimonial-video{position:relative;background:#19171d;border-radius:16px;overflow:hidden}
+/* Percentage padding preserves 9:16 even on Safari without aspect-ratio. */
+.testimonial-video::before{content:'';display:block;padding-top:177.777778%}
+.testimonial-player{position:absolute;top:0;left:0;display:block;width:100%;height:100%;object-fit:contain}
 .testimonial-listen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;border:0;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,.18),transparent);color:#fff;font-size:clamp(15px,2.5vw,19px);font-weight:700;text-shadow:0 2px 8px #000;cursor:pointer}
 .testimonial-listen>span:last-child{padding:9px 16px;border-radius:24px;background:rgba(0,0,0,.65)}
-.testimonial-play{display:grid;place-items:center;width:72px;height:72px;border:2px solid rgba(255,255,255,.9);border-radius:50%;background:rgba(0,0,0,.5);box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .2s}
+.testimonial-play{display:grid;place-items:center;flex-shrink:0;width:72px;height:72px;border:2px solid rgba(255,255,255,.9);border-radius:50%;background:rgba(0,0,0,.5);box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .2s}
 .testimonial-play svg{width:36px;height:36px}
 .testimonial-listen:hover .testimonial-play{transform:scale(1.08)}
 .testimonial-listen:focus-visible{outline-offset:-5px}
 .is-listening .testimonial-listen{display:none}
 .carousel-dots button{width:24px;height:24px;border:7px solid #fff}
 @media(max-width:600px){.carousel{margin-inline:auto}.testimonial-play{width:64px;height:64px}}
+/* Explicit sizing prevents Safari's native button padding from widening arrows. */
+.carousel-arrow{width:44px;min-width:44px;padding:0;display:flex;align-items:center;justify-content:center;line-height:1;appearance:none;-webkit-appearance:none}
+@media(max-width:600px){.carousel-arrow{width:36px;min-width:36px}}
+@media(max-width:375px){.carousel{gap:6px;margin-left:-8px;margin-right:-8px}.testimonial-listen{padding:12px}.testimonial-listen>span:last-child{padding:9px 12px}}
 /* Avoid extra bottom margins between neighboring sections. */
 .section > .container > :last-child:not(.visually-hidden){margin-bottom:0}
 
